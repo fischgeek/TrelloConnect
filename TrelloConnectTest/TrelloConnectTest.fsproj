@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TrelloConnect.fsproj" />
+    <ProjectReference Include="..\TrelloConnect\TrelloConnect.fsproj" />
   </ItemGroup>
 
 </Project>
