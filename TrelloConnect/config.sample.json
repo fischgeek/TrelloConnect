@@ -1,0 +1,7 @@
+{
+    "APIKey": "string",
+    "APIToken": "string",
+    "TestBoardId": "string",
+    "TestListId": "string",
+    "TestCardId": "string"
+}
