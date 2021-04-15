@@ -21,7 +21,7 @@ module Main =
         let cardId = cfg.TestCardId
 
         outTitle "Get all boards" ""
-        trello.GetMyBoards
+        trello.GetBoards()
         |> Seq.iter (fun b -> outData b.Id b.Name)
         
         outTitle "Get a board" boardId 
