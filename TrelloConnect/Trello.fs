@@ -43,13 +43,25 @@ module Trello =
             this.FormatURL $"/members/me/boards" [param "filter" filter]
             |> Get Types.ParseBoards "Could not get boards."
 
+        member this.GetBoard id =
+            this.FormatURL 
+                $"/boards/{id}" 
+                [
+                    param "fields" "name,desc,closed,pinned,shortLink,starred,url,shortUrl,dateLastActivity,dateLastView"
+                ]
+                |> Get Types.ParseBoard "Could not get board."
+        
+        //member this.GetBoard (id, props: BoardProperty list) =
+        //    this.FormatURL 
+        //        $"/boards/{id}" 
+        //        [
+        //            param "fields" BoardProperty.DefaultFields
+        //        ]
+        //        |> Get Types.ParseBoard "Could not get board."
+
         member this.GetLabelsOnBoard boardId =
             this.FormatURL $"/boards/{boardId}/labels" []
-            |> Get Types.ParseLabels "Could not get labels."
-
-        member this.GetBoard id =
-            this.FormatURL $"/boards/{id}" []
-            |> Get Types.ParseBoard "Could not get board."
+            |> Get ParseLabels "Could not get labels."
 
         member this.GetLists boardId =
             this.FormatURL $"/boards/{boardId}/lists" []
@@ -106,13 +118,13 @@ module Trello =
                   param "pos" (pos |> SP.NoneToBlank) ]
             |> Put ignore "Failed to move card."
 
-        member this.GetCustomFieldsOnBoard id =
-            this.FormatURL $"/boards/{id}/customFields" []
-            |> Get Types.ParseCustomFields "Failed to get custom fields on board."
+        //member this.GetCustomFieldsOnBoard id =
+        //    this.FormatURL $"/boards/{id}/customFields" []
+        //    |> Get Types.ParseCustomFields "Failed to get custom fields on board."
 
-        member this.GetCustomFieldsOnCard id =
-            this.FormatURL $"/cards/{id}/customFieldItems" []
-            |> Get Types.ParseCardCustomFields "Failed to get custom fields on card."
+        //member this.GetCustomFieldsOnCard id =
+        //    this.FormatURL $"/cards/{id}/customFieldItems" []
+        //    |> Get Types.ParseCardCustomFields "Failed to get custom fields on card."
 
         member this.SetDueDate id dueDate =
             this.FormatURL $"/cards/{id}" [ param "due" dueDate ]

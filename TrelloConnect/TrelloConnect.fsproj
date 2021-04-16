@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Utils.fs" />
     <EmbeddedResource Include="Samples\attachment.sample.json" />
     <EmbeddedResource Include="Samples\attachments.sample.json" />
     <EmbeddedResource Include="Samples\board.sample.json" />
@@ -25,8 +26,6 @@
     <Compile Include="Trello.fs" />
     <Compile Include="TrelloOld.fs" />
   </ItemGroup>
-
-  <ItemGroup />
 
   <ItemGroup>
     <PackageReference Include="FSharp.Data" Version="3.3.3" />
