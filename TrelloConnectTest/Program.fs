@@ -9,15 +9,16 @@ open TrelloConnect.Types
 
 module Main = 
     [<Literal>]
-    let CfgString = """
+    let CfgString = 
+        """
         {
-            "ApiKey": "string"
-            "ApiToken": "string"
-            "TestBoardId": "string"
-            "TestListId": "string"
+            "ApiKey": "string",
+            "ApiToken": "string",
+            "TestBoardId": "string",
+            "TestListId": "string",
             "TestCardId": "string"
         }
-    """
+        """
     type Config = JsonProvider<CfgString, RootName="Config">
     let cfg = File.ReadAllText(@"c:\dev\config\trelloconnect.json") |> Config.Parse
     let wait() = Console.ReadLine() |> ignore
