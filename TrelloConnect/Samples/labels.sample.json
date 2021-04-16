@@ -1,0 +1,32 @@
+﻿[
+  {
+    "id": "string",
+    "idBoard": "string",
+    "name": "string",
+    "color": "green"
+  },
+  {
+    "id": "string",
+    "idBoard": "string",
+    "name": "string",
+    "color": "yellow"
+  },
+  {
+    "id": "string",
+    "idBoard": "string",
+    "name": "string",
+    "color": "orange"
+  },
+  {
+    "id": "string",
+    "idBoard": "string",
+    "name": "string",
+    "color": "red"
+  },
+  {
+    "id": "string",
+    "idBoard": "string",
+    "name": "string",
+    "color": "purple"
+  }
+]

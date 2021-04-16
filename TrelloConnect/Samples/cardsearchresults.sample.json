@@ -1,0 +1,90 @@
+﻿{
+    "options": {
+        "terms": [{
+            "text": "string"
+        }],
+        "modifiers": [],
+        "modelTypes": [
+            "cards"
+        ],
+        "partial": false
+    },
+    "cards": [{
+        "id": "string",
+        "checkItemStates": [],
+        "closed": false,
+        "dateLastActivity": "2021-02-22T22:48:33.072Z",
+        "desc": "string",
+        "descData": {
+            "emoji": {}
+        },
+        "dueReminder": null,
+        "idBoard": "string",
+        "idList": "string",
+        "idMembersVoted": [],
+        "idShort": 30,
+        "idAttachmentCover": null,
+        "idLabels": [
+            "string",
+            "string"
+        ],
+        "manualCoverAttachment": false,
+        "name": "string",
+        "pos": 1196032,
+        "shortLink": "string",
+        "isTemplate": false,
+        "cardRole": null,
+        "dueComplete": false,
+        "due": null,
+        "email": null,
+        "shortUrl": "string",
+        "start": null,
+        "url": "string",
+        "idMembers": [],
+        "badges": {
+            "attachmentsByType": {
+                "trello": {
+                    "board": 0,
+                    "card": 0
+                }
+            },
+            "location": false,
+            "votes": 0,
+            "viewingMemberVoted": false,
+            "subscribed": false,
+            "fogbugz": "",
+            "checkItems": 0,
+            "checkItemsChecked": 0,
+            "checkItemsEarliestDue": null,
+            "comments": 6,
+            "attachments": 0,
+            "description": true,
+            "due": null,
+            "dueComplete": false,
+            "start": null
+        },
+        "subscribed": false,
+        "idChecklists": [],
+        "labels": [{
+                "id": "string",
+                "idBoard": "string",
+                "name": "string",
+                "color": null
+            },
+            {
+                "id": "string",
+                "idBoard": "string",
+                "name": "string",
+                "color": null
+            }
+        ],
+        "cover": {
+            "idAttachment": null,
+            "color": null,
+            "idUploadedBackground": null,
+            "size": "normal",
+            "brightness": "light",
+            "idPlugin": null
+        }
+    }]
+}

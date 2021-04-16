@@ -24,32 +24,32 @@ module Main =
         trello.GetBoards()
         |> Seq.iter (fun b -> outData b.Id b.Name)
         
-        outTitle "Get a board" boardId 
-        let b = trello.GetBoard boardId
-        outData "board" b.Name
+        //outTitle "Get a board" boardId 
+        //let b = trello.GetBoard boardId
+        //outData "board" b.Name
 
-        outTitle "Get lists on a board" boardId
-        trello.GetLists boardId
-        |> Seq.iter (fun l -> outData l.Id l.Name)
+        //outTitle "Get lists on a board" boardId
+        //trello.GetLists boardId
+        //|> Seq.iter (fun l -> outData l.Id l.Name)
 
-        outTitle "Get a list" listId
-        let l = trello.GetList listId
-        outData l.Id l.Name
+        //outTitle "Get a list" listId
+        //let l = trello.GetList listId
+        //outData l.Id l.Name
         
-        outTitle "Get cards on a list" listId
-        trello.GetCards listId
-        |> Seq.iter (fun c -> outData c.Id c.Name)
+        //outTitle "Get cards on a list" listId
+        //trello.GetCards listId
+        //|> Seq.iter (fun c -> outData c.Id c.Name)
 
-        outTitle "Get a card" cardId
-        let c = trello.GetCard cardId
-        outData c.Id c.Name
+        //outTitle "Get a card" cardId
+        //let c = trello.GetCard cardId
+        //outData c.Id c.Name
 
-        outTitle "Get card created date" cardId
-        outData "Date created: " ((Pipes.CardPipe.CreatedDate c.Id).ToString("yyyy-M-d"))
+        //outTitle "Get card created date" cardId
+        //outData "Date created: " ((Pipes.CardPipe.CreatedDate c.Id).ToString("yyyy-M-d"))
 
-        outTitle "Get attachements on a card" cardId
-        let attachments = trello.GetCardAttachments cardId
-        outData "attachments" (attachments.Length.ToString())
-        attachments |> Seq.iteri (fun i a -> outData i a.Name)
+        //outTitle "Get attachements on a card" cardId
+        //let attachments = trello.GetCardAttachments cardId
+        //outData "attachments" (attachments.Length.ToString())
+        //attachments |> Seq.iteri (fun i a -> outData i a.Name)
         wait()
         0

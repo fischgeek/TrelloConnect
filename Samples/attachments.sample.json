@@ -1,0 +1,16 @@
+﻿[
+  {
+    "id": "string",
+    "bytes": 133488,
+    "date": "2021-01-06T16:02:56.964Z",
+    "edgeColor": null,
+    "idMember": "string",
+    "isUpload": true,
+    "mimeType": "application/csv",
+    "name": "string",
+    "previews": [],
+    "url": "string",
+    "pos": 16384,
+    "fileName": "string"
+  }
+]

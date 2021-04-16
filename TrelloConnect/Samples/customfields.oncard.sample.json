@@ -1,0 +1,17 @@
+﻿[{
+        "id": "string",
+        "idValue": "string",
+        "idCustomField": "string",
+        "idModel": "string",
+        "modelType": "card"
+    },
+    {
+        "id": "string",
+        "value": {
+            "number": "string"
+        },
+        "idCustomField": "string",
+        "idModel": "string",
+        "modelType": "string"
+    }
+]

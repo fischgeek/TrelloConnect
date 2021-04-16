@@ -1,0 +1,11 @@
+﻿[
+  {
+    "id": "string",
+    "name": "string",
+    "closed": false,
+    "pos": 16384,
+    "softLimit": null,
+    "idBoard": "string",
+    "subscribed": false
+  }
+]
