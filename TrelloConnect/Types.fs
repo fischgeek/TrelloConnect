@@ -9,27 +9,24 @@ open Utils
 [<AutoOpen>]
 module Types = 
     type private _Boards = JsonProvider<"Samples/boards.sample.json",RootName="Boards">
-    //type private _Board = JsonProvider<"Samples/board.sample.json",RootName="Board">
     type private _Labels = JsonProvider<"Samples/labels.sample.json",RootName="Labels">
-    //type private _Label = JsonProvider<"Samples/label.sample.json", RootName="Label">
     type private _Lists = JsonProvider<"Samples/lists.sample.json", RootName="Lists">
-    //type private _List = JsonProvider<"Samples/list.sample.json", RootName="List">
     type private _Cards = JsonProvider<"Samples/cards.sample.json", RootName="Cards">
     type private _Attachments = JsonProvider<"Samples/attachments.sample.json", RootName="Attachments">
     type private _CustomFields = JsonProvider<"Samples/customfields.sample.json", RootName="CustomFields">
     type private _CardCustomFields = JsonProvider<"Samples/customfields.oncard.sample.json", RootName="CardCustomFields">
     type private _CardSearchResults = JsonProvider<"Samples/cardsearchresults.sample.json", RootName="CardSearchResults">
     
-    type private BoardProperty = 
+    type private BoardFields = 
         | Name
         | Desc
         | Pinned
-        static member Stringify (props: BoardProperty list) : string = 
+        static member Stringify (props: BoardFields list) : string = 
             props 
             |> Seq.map (fun x -> x.ToString()) 
             |> String.concat ","
         static member DefaultFields = 
-            [BoardProperty.Name; BoardProperty.Desc;] |> BoardProperty.Stringify
+            [BoardFields.Name; BoardFields.Desc;] |> BoardFields.Stringify
 
     type Attachment = 
         {
@@ -78,7 +75,6 @@ module Types =
         {
             Cards: Card []
         }
-
     
     let private buildBoard (b: _Boards.Board) = 
         { 

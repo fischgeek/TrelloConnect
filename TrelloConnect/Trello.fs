@@ -51,11 +51,11 @@ module Trello =
                 ]
                 |> Get Types.ParseBoard "Could not get board."
         
-        //member this.GetBoard (id, props: BoardProperty list) =
+        //member this.GetBoard (id, props: BoardFields list) =
         //    this.FormatURL 
         //        $"/boards/{id}" 
         //        [
-        //            param "fields" BoardProperty.DefaultFields
+        //            param "fields" BoardFields.DefaultFields
         //        ]
         //        |> Get Types.ParseBoard "Could not get board."
 
