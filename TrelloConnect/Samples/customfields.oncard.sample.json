@@ -1,17 +1,39 @@
-﻿[{
-        "id": "string",
-        "idValue": "string",
-        "idCustomField": "string",
-        "idModel": "string",
-        "modelType": "card"
-    },
-    {
-        "id": "string",
-        "value": {
-            "number": "string"
-        },
-        "idCustomField": "string",
-        "idModel": "string",
-        "modelType": "string"
+﻿[
+  {
+    "id": "string",
+    "idValue": "string",
+    "idCustomField": "string",
+    "idModel": "string",
+    "modelType": "card",
+    "pos": 98304,
+    "display": {
+      "cardFront": true
     }
+  },
+  {
+    "id": "string",
+    "value": {
+      "number": "string"
+    },
+    "display": {
+      "cardFront": true
+    },
+    "idCustomField": "string",
+    "idModel": "string",
+    "modelType": "string",
+    "pos": 98304
+  },
+  {
+    "id": "string",
+    "value": {
+      "text": "string"
+    },
+    "display": {
+      "cardFront": true
+    },
+    "idCustomField": "string",
+    "idModel": "string",
+    "modelType": "string",
+    "pos": 98304
+  }
 ]

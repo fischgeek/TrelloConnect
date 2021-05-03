@@ -7,6 +7,14 @@ open System.Configuration
 
 [<AutoOpen>]
 module Trello =
+    let private MakeCallWithBody verb url (body:string) fn msg = 
+        
+        HRB.Url url
+        |> HRB.Body body
+        |> verb
+        |> function
+        | Success x -> fn x
+        | _ -> failwith msg
     let private MakeCall verb url fn msg =
         HRB.Url url
         |> verb
@@ -16,6 +24,7 @@ module Trello =
 
     let private Get fn msg url = MakeCall HttpGet url fn msg
     let private Put fn msg url = MakeCall HttpGet url fn msg
+    let private PutBody fn msg body url = MakeCallWithBody HttpPut url body fn msg
     let private Del fn msg url = MakeCall HttpGet url fn msg
     let private Pos fn msg url = MakeCall HttpGet url fn msg
 
@@ -120,11 +129,11 @@ module Trello =
 
         //member this.GetCustomFieldsOnBoard id =
         //    this.FormatURL $"/boards/{id}/customFields" []
-        //    |> Get Types.ParseCustomFields "Failed to get custom fields on board."
+        //    |> Get Types "Failed to get custom fields on board."
 
-        //member this.GetCustomFieldsOnCard id =
-        //    this.FormatURL $"/cards/{id}/customFieldItems" []
-        //    |> Get Types.ParseCardCustomFields "Failed to get custom fields on card."
+        member this.GetCustomFieldsOnCard id =
+            this.FormatURL $"/cards/{id}/customFieldItems" []
+            |> Get Types.ParseCardCustomFields "Failed to get custom fields on card."
 
         member this.SetDueDate id dueDate =
             this.FormatURL $"/cards/{id}" [ param "due" dueDate ]
@@ -136,3 +145,8 @@ module Trello =
                 [ param "query" query
                   param "modelTypes" "cards" ]
             |> Get Types.ParseCardSearchResults "Failed to search."
+
+        member this.SetCustomFieldValue cardId customFieldId (newValue: string) = 
+            this.FormatURL
+                $"/cards/{cardId}/customField/{customFieldId}/item" []
+            |> PutBody ignore "Failed to update field." newValue

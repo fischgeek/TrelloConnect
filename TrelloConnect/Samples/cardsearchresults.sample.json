@@ -69,13 +69,13 @@
                 "id": "string",
                 "idBoard": "string",
                 "name": "string",
-                "color": null
+                "color": "string"
             },
             {
                 "id": "string",
                 "idBoard": "string",
                 "name": "string",
-                "color": null
+                "color": "string"
             }
         ],
         "cover": {

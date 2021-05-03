@@ -26,21 +26,21 @@ module WebCalls =
             Url: string
             Query: (string * string) list
             Headers: (string * string) list
-            Body: HttpRequestBody
+            Body: string
         }
-        static member Empty = { Url = ""; Query = []; Headers = []; Body = HttpRequestBody.TextRequest "" }
+        static member Empty = { Url = ""; Query = []; Headers = []; Body = "" }
     
     type HRB =
         static member Url x = {HttpRequestBuilder.Empty with Url=x}
         static member Query x b = {b with Query = x}
         static member Headers x b = {b with HttpRequestBuilder.Headers = x}
-        static member Body x b = {b with HttpRequestBuilder.Body = x}
+        static member Body x b = {b with HttpRequestBuilder.Body = x }
     
     let HttpGet (x:HttpRequestBuilder) = 
         Http.Request(url = x.Url, query = x.Query, headers = x.Headers, httpMethod = "get") |> ReturnResponse
 
     let HttpPut (x:HttpRequestBuilder) = 
-        Http.Request(url = x.Url, query = x.Query, headers = x.Headers, httpMethod = "put") |> ReturnResponse
+        Http.Request(url = x.Url, query = x.Query, headers = x.Headers, httpMethod = "put", body = (x.Body |> TextRequest)) |> ReturnResponse
 
     let HttpDel (x:HttpRequestBuilder) = 
         Http.Request(url = x.Url, query = x.Query, headers = x.Headers, httpMethod = "delete") |> ReturnResponse
