@@ -64,5 +64,6 @@ module Main =
         let attachments = trello.GetCardAttachments cardId
         outData "attachments" $"{(attachments |> Seq.toArray).Length}"
         attachments |> Seq.iteri (fun i a -> outData i a.Name)
+
         wait()
         0

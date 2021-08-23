@@ -1,0 +1,176 @@
+﻿{
+    "options": {
+        "terms": [{
+            "text": "string"
+        }],
+        "modifiers": [],
+        "modelTypes": [
+            "cards"
+        ],
+        "partial": false
+    },
+  "cards": [
+    {
+      "id": "string",
+      "checkItemStates": [],
+      "closed": false,
+      "dateLastActivity": "2021-02-22T22:48:33.072Z",
+      "desc": "string",
+      "descData": {
+        "emoji": {}
+      },
+      "dueReminder": null,
+      "idBoard": "string",
+      "idList": "string",
+      "idMembersVoted": [],
+      "idShort": 30,
+      "idAttachmentCover": null,
+      "idLabels": [
+        "string",
+        "string"
+      ],
+      "manualCoverAttachment": false,
+      "name": "string",
+      "pos": 1196032,
+      "shortLink": "string",
+      "isTemplate": false,
+      "cardRole": null,
+      "dueComplete": false,
+      "due": null,
+      "email": null,
+      "shortUrl": "string",
+      "start": null,
+      "url": "string",
+      "idMembers": [],
+      "badges": {
+        "attachmentsByType": {
+          "trello": {
+            "board": 0,
+            "card": 0
+          }
+        },
+        "location": false,
+        "votes": 0,
+        "viewingMemberVoted": false,
+        "subscribed": false,
+        "fogbugz": "",
+        "checkItems": 0,
+        "checkItemsChecked": 0,
+        "checkItemsEarliestDue": null,
+        "comments": 6,
+        "attachments": 0,
+        "description": true,
+        "due": null,
+        "dueComplete": false,
+        "start": null
+      },
+      "subscribed": false,
+      "idChecklists": [],
+      "labels": [
+        {
+          "id": "string",
+          "idBoard": "string",
+          "name": "string",
+          "color": "string"
+        },
+        {
+          "id": "string",
+          "idBoard": "string",
+          "name": "string",
+          "color": "string"
+        }
+      ],
+      "cover": {
+        "idAttachment": null,
+        "color": null,
+        "idUploadedBackground": null,
+        "size": "normal",
+        "brightness": "light",
+        "idPlugin": null
+      }
+    }
+  ],
+  "boards": [
+    {
+      "name": "string",
+      "desc": "string",
+      "descData": null,
+      "closed": false,
+      "idOrganization": "string",
+      "idEnterprise": null,
+      "limits": null,
+      "pinned": false,
+      "shortLink": "string",
+      "powerUps": [],
+      "dateLastActivity": "2021-01-06T16:02:57.164Z",
+      "idTags": [],
+      "datePluginDisable": null,
+      "creationMethod": "automatic",
+      "ixUpdate": null,
+      "enterpriseOwned": false,
+      "idBoardSource": null,
+      "idMemberCreator": "string",
+      "id": "string",
+      "starred": false,
+      "url": "string",
+      "prefs": {
+        "permissionLevel": "org",
+        "hideVotes": false,
+        "voting": "disabled",
+        "comments": "members",
+        "invitations": "members",
+        "selfJoin": true,
+        "cardCovers": true,
+        "isTemplate": false,
+        "cardAging": "regular",
+        "calendarFeedEnabled": false,
+        "background": "blue",
+        "backgroundImage": null,
+        "backgroundImageScaled": null,
+        "backgroundTile": false,
+        "backgroundBrightness": "dark",
+        "backgroundColor": "#0079BF",
+        "backgroundBottomColor": "#0079BF",
+        "backgroundTopColor": "#0079BF",
+        "canBePublic": true,
+        "canBeEnterprise": true,
+        "canBeOrg": true,
+        "canBePrivate": true,
+        "canInvite": true
+      },
+      "subscribed": false,
+      "labelNames": {
+        "green": "",
+        "yellow": "",
+        "orange": "",
+        "red": "",
+        "purple": "",
+        "blue": "",
+        "sky": "",
+        "lime": "",
+        "pink": "",
+        "black": ""
+      },
+      "dateLastView": "2021-01-05T18:04:49.676Z",
+      "shortUrl": "string",
+      "templateGallery": null,
+      "premiumFeatures": [],
+      "memberships": [
+        {
+          "id": "string",
+          "idMember": "string",
+          "memberType": "admin",
+          "unconfirmed": false,
+          "deactivated": false
+        },
+        {
+          "id": "string",
+          "idMember": "string",
+          "memberType": "normal",
+          "unconfirmed": false,
+          "deactivated": false
+        }
+      ]
+    }
+  ]
+}

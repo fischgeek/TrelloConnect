@@ -11,7 +11,7 @@ module WebCalls =
         | Unauthorized
         | Throttle
         | Success of string
-        | Nothing
+        | Nothing of string
     let private ReturnResponse(res: HttpResponse): HttpResponseStatus =
         match res.StatusCode with
         | 401 -> Unauthorized
@@ -19,7 +19,7 @@ module WebCalls =
         | _ ->
             match res.Body with
             | Text txt -> Success txt
-            | _ -> Nothing
+            | Binary value -> Nothing (System.Text.Encoding.Default.GetString(value))
 
     type HttpRequestBuilder = 
         {
@@ -41,12 +41,18 @@ module WebCalls =
 
     let HttpPut (x:HttpRequestBuilder) = 
         Http.Request(url = x.Url, query = x.Query, headers = x.Headers, httpMethod = "put", body = (x.Body |> TextRequest)) |> ReturnResponse
+        
+    let HttpPutJson (x:HttpRequestBuilder) = 
+        Http.Request(url = x.Url, query = x.Query, headers = [ ContentType HttpContentTypes.Json ], httpMethod = "put", body = (x.Body |> TextRequest)) |> ReturnResponse
 
     let HttpDel (x:HttpRequestBuilder) = 
         Http.Request(url = x.Url, query = x.Query, headers = x.Headers, httpMethod = "delete") |> ReturnResponse
 
     let HttpPost (x:HttpRequestBuilder) =
-        Http.Request (url = x.Url, query = x.Query, headers = x.Headers, httpMethod = "post") |> ReturnResponse
+        Http.Request (url = x.Url, query = x.Query, headers = [ ContentType HttpContentTypes.Json ], httpMethod = "post", body = (x.Body |> TextRequest)) |> ReturnResponse
+
+    let HttpPostAsync (x:HttpRequestBuilder) =
+        Http.AsyncRequest (url = x.Url, query = x.Query, headers = [ ContentType HttpContentTypes.Text ], httpMethod = "post", body = (x.Body |> TextRequest))
 
     //let Post url (username: string) jsonBody=
     //    Http.Request

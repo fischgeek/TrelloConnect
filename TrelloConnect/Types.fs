@@ -9,17 +9,14 @@ open Utils
 [<AutoOpen>]
 module Types =
     type private _Boards = JsonProvider<"Samples/boards.sample.json", RootName="Boards">
-    type private _Labels = JsonProvider<"Samples/labels.sample.json", RootName="Labels">
+    type private _Labels = JsonProvider<"Samples/labels.sample.json", RootName="Labels">    
     type private _Lists = JsonProvider<"Samples/lists.sample.json", RootName="Lists">
     type private _Cards = JsonProvider<"Samples/cards.sample.json", RootName="Cards">
     type private _Attachments = JsonProvider<"Samples/attachments.sample.json", RootName="Attachments">
     type private _CustomFields = JsonProvider<"Samples/customfields.sample.json", RootName="CustomFields">
-
-    type private _CardCustomFields =
-        JsonProvider<"Samples/customfields.oncard.sample.json", RootName="CardCustomFields">
-
-    type private _CardSearchResults =
-        JsonProvider<"Samples/cardsearchresults.sample.json", RootName="CardSearchResults">
+    type private _CardCustomFields = JsonProvider<"Samples/customfields.oncard.sample.json", RootName="CardCustomFields">
+    type private _CardSearchResults = JsonProvider<"Samples/cardsearchresults.sample.json", RootName="CardSearchResults">
+    type private _SearchResults = JsonProvider<"Samples/searchresults.sample.json", RootName="SearchResults">
 
     type private BoardFields =
         | Name
@@ -64,7 +61,8 @@ module Types =
           Name: string
           Desc: string
           Labels: Label List
-          CreatedDate: DateTime }
+          CreatedDate: DateTime 
+          Closed: bool }
 
     type List =
         { Id: string
@@ -111,7 +109,8 @@ module Types =
           Name = c.Name
           Desc = c.Desc
           Labels = c.Labels |> Seq.map buildLabel |> Seq.toList
-          CreatedDate = Pipes.CardPipe.CreatedDate c.Id }
+          CreatedDate = Pipes.CardPipe.CreatedDate c.Id 
+          Closed = c.Closed }
 
     let private buildLabelFromLabels (l: _Labels.Label) =
         { Id = l.Id
@@ -173,7 +172,7 @@ module Types =
 
     let ParseCards x = _Cards.Parse x |> Seq.map buildCard
 
-    let ParseCard x =
+    let ParseCard (x: string) =
         _Cards.Parse $"[{x}]" |> Seq.item 0 |> buildCard
 
     let ParseAttachments x =
@@ -192,4 +191,5 @@ module Types =
                   Name = c.Name
                   Desc = c.Desc
                   CreatedDate = Pipes.CardPipe.CreatedDate c.Id
+                  Closed = c.Closed
                   Labels = c.Labels |> Seq.map buildLabelFromCardSearchResults |> Seq.toList })

@@ -1,9 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <!--<TargetFramework>netstandard2.0</TargetFramework>-->
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Include="Utils.fs" />
     <EmbeddedResource Include="Samples\attachment.sample.json" />
@@ -12,7 +12,7 @@
     <EmbeddedResource Include="Samples\boards.sample.json" />
     <EmbeddedResource Include="Samples\card.sample.json" />
     <EmbeddedResource Include="Samples\cards.sample.json" />
-    <EmbeddedResource Include="Samples\cardsearchresults.sample.json" />
+    <EmbeddedResource Include="Samples\searchresults.sample.json" />
     <EmbeddedResource Include="Samples\customfields.oncard.sample.json" />
     <EmbeddedResource Include="Samples\customfields.sample.json" />
     <EmbeddedResource Include="Samples\hook.sample.json" />
@@ -21,19 +21,18 @@
     <EmbeddedResource Include="Samples\list.sample.json" />
     <EmbeddedResource Include="Samples\lists.sample.json" />
     <Compile Include="APICalls.fs" />
+    <Compile Include="OAuth.fs" />
+    <Compile Include="Authorize.fs" />
     <Compile Include="Pipes.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="Trello.fs" />
     <Compile Include="TrelloOld.fs" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="FSharp.Data" Version="3.3.3" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Update="FSharp.Core" Version="5.0.0" />
   </ItemGroup>
-
 </Project>

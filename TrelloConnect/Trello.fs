@@ -8,7 +8,6 @@ open System.Configuration
 [<AutoOpen>]
 module Trello =
     let private MakeCallWithBody verb url (body:string) fn msg = 
-        
         HRB.Url url
         |> HRB.Body body
         |> verb
@@ -17,16 +16,17 @@ module Trello =
         | _ -> failwith msg
     let private MakeCall verb url fn msg =
         HRB.Url url
+        |> HRB.Body ""
         |> verb
         |> function
         | Success x -> fn x
         | _ -> failwith msg
 
     let private Get fn msg url = MakeCall HttpGet url fn msg
-    let private Put fn msg url = MakeCall HttpGet url fn msg
-    let private PutBody fn msg body url = MakeCallWithBody HttpPut url body fn msg
-    let private Del fn msg url = MakeCall HttpGet url fn msg
-    let private Pos fn msg url = MakeCall HttpGet url fn msg
+    let private Put fn msg url = MakeCall HttpPut url fn msg
+    let private PutJson fn msg body url = MakeCallWithBody HttpPutJson url body fn msg
+    let private Del fn msg url = MakeCall HttpDel url fn msg
+    let private Pos fn msg url = MakeCall HttpPost url fn msg
 
     let param paramKey paramVal =
         paramVal |> SP.PrependIfNotEmpty $"{paramKey}="
@@ -96,13 +96,21 @@ module Trello =
                   param "desc" (desc |> SP.NoneToBlank) ]
             |> Pos ignore "Failed to create card."
 
+        member this.CreateCard2(listId, name, ?desc) =
+            this.FormatURL
+                $"/cards"
+                [ param "idList" listId
+                  param "name" name
+                  param "desc" (desc |> SP.NoneToBlank) ]
+            |> Pos ignore "Failed to create card."
+
         member this.UpdateCard(cardId, ?newName, ?newDesc, ?pos) =
             this.FormatURL
-                $"cards/{cardId}"
+                $"/cards/{cardId}"
                 [ param "name" (newName |> SP.NoneToBlank)
                   param "desc" (newDesc |> SP.NoneToBlank)
                   param "pos" (pos |> SP.NoneToBlank) ]
-            |> Put ignore "Failed to update card."
+            |> Put Types.ParseCard "Failed to update card."
 
         member this.GetCardAttachments cardId =
             this.FormatURL $"/cards/{cardId}/attachments" []
@@ -127,6 +135,26 @@ module Trello =
                   param "pos" (pos |> SP.NoneToBlank) ]
             |> Put ignore "Failed to move card."
 
+        member this.QuickMoveCard id newListId =
+            this.FormatURL
+                $"/cards/{id}"
+                [ param "idList" newListId ]
+            |> Put ignore "Failed to move card."
+
+        member this.MoveCardToTop id newListId = 
+            this.FormatURL
+                $"/cards/{id}"
+                [ param "idList" newListId
+                  param "pos" "top" ]
+            |> Put ignore "Failed to move card."
+
+        member this.MoveCardToBottom id newListId = 
+            this.FormatURL
+                $"/cards/{id}"
+                [ param "idList" newListId
+                  param "pos" "bottom" ]
+            |> Put ignore "Failed to move card."
+
         //member this.GetCustomFieldsOnBoard id =
         //    this.FormatURL $"/boards/{id}/customFields" []
         //    |> Get Types "Failed to get custom fields on board."
@@ -144,9 +172,9 @@ module Trello =
                 $"/search"
                 [ param "query" query
                   param "modelTypes" "cards" ]
-            |> Get Types.ParseCardSearchResults "Failed to search."
+            |> Get Types.ParseCardSearchResults "Failed to search cards."
 
         member this.SetCustomFieldValue cardId customFieldId (newValue: string) = 
             this.FormatURL
                 $"/cards/{cardId}/customField/{customFieldId}/item" []
-            |> PutBody ignore "Failed to update field." newValue
+            |> PutJson ignore "Failed to update field." newValue
