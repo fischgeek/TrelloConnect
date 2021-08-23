@@ -2,6 +2,7 @@
 
 open System
 
+[<AutoOpen>]
 module Pipes = 
     type Board = 
         { Id: string
@@ -25,6 +26,7 @@ module Pipes =
         static member IsNotEmptyOrWhitespce = StringPipe.Trim >> String.IsNullOrEmpty >> not
         static member ExcludeBlankLines(lines: string seq): string seq = lines |> Seq.filter StringPipe.IsNotEmptyOrWhitespce
         static member Append (whatToAppend: string) (appendTo: string) = appendTo + whatToAppend
+        static member IsEmpty x = String.IsNullOrEmpty x
         static member RemoveBlankLines(text: string): string =
             text
             |> StringPipe.Lines

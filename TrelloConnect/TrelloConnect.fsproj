@@ -1,11 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <!--<TargetFramework>netstandard2.0</TargetFramework>-->
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <!--<TargetFramework>netcoreapp3.1</TargetFramework>-->
     <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Utils.fs" />
     <EmbeddedResource Include="Samples\attachment.sample.json" />
     <EmbeddedResource Include="Samples\attachments.sample.json" />
     <EmbeddedResource Include="Samples\board.sample.json" />
@@ -20,10 +19,11 @@
     <EmbeddedResource Include="Samples\labels.sample.json" />
     <EmbeddedResource Include="Samples\list.sample.json" />
     <EmbeddedResource Include="Samples\lists.sample.json" />
+    <Compile Include="Utils.fs" />
+    <Compile Include="Pipes.fs" />
     <Compile Include="APICalls.fs" />
     <Compile Include="OAuth.fs" />
     <Compile Include="Authorize.fs" />
-    <Compile Include="Pipes.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="Trello.fs" />
     <Compile Include="TrelloOld.fs" />

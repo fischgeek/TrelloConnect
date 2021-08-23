@@ -8,15 +8,15 @@ open Utils
 
 [<AutoOpen>]
 module Types =
-    type private _Boards = JsonProvider<"Samples/boards.sample.json", RootName="Boards">
-    type private _Labels = JsonProvider<"Samples/labels.sample.json", RootName="Labels">    
-    type private _Lists = JsonProvider<"Samples/lists.sample.json", RootName="Lists">
-    type private _Cards = JsonProvider<"Samples/cards.sample.json", RootName="Cards">
-    type private _Attachments = JsonProvider<"Samples/attachments.sample.json", RootName="Attachments">
-    type private _CustomFields = JsonProvider<"Samples/customfields.sample.json", RootName="CustomFields">
-    type private _CardCustomFields = JsonProvider<"Samples/customfields.oncard.sample.json", RootName="CardCustomFields">
-    type private _CardSearchResults = JsonProvider<"Samples/cardsearchresults.sample.json", RootName="CardSearchResults">
-    type private _SearchResults = JsonProvider<"Samples/searchresults.sample.json", RootName="SearchResults">
+    type private _Boards = JsonProvider<"../TrelloConnect/Samples/boards.sample.json", RootName="Boards">
+    type private _Labels = JsonProvider<"../TrelloConnect/Samples/labels.sample.json", RootName="Labels">    
+    type private _Lists = JsonProvider<"../TrelloConnect/Samples/lists.sample.json", RootName="Lists">
+    type private _Cards = JsonProvider<"../TrelloConnect/Samples/cards.sample.json", RootName="Cards">
+    type private _Attachments = JsonProvider<"../TrelloConnect/Samples/attachments.sample.json", RootName="Attachments">
+    type private _CustomFields = JsonProvider<"../TrelloConnect/Samples/customfields.sample.json", RootName="CustomFields">
+    type private _CardCustomFields = JsonProvider<"../TrelloConnect/Samples/customfields.oncard.sample.json", RootName="CardCustomFields">
+    type private _CardSearchResults = JsonProvider<"../TrelloConnect/Samples/cardsearchresults.sample.json", RootName="CardSearchResults">
+    type private _SearchResults = JsonProvider<"../TrelloConnect/Samples/searchresults.sample.json", RootName="SearchResults">
 
     type private BoardFields =
         | Name

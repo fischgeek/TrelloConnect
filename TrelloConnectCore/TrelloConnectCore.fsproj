@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!--<TargetFramework>netstandard2.0</TargetFramework>-->
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\TrelloConnect\Utils.fs" />
+    <Compile Include="..\TrelloConnect\Pipes.fs" />
+    <Compile Include="..\TrelloConnect\APICalls.fs" />
+    <Compile Include="..\TrelloConnect\OAuth.fs" />
+    <Compile Include="..\TrelloConnect\Authorize.fs" />
+    <Compile Include="..\TrelloConnect\Types.fs" />
+    <Compile Include="..\TrelloConnect\Trello.fs" />
+    <Compile Include="..\TrelloConnect\TrelloOld.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FSharp.Data" Version="3.3.3" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="5.0.0" />
+  </ItemGroup>
+</Project>
