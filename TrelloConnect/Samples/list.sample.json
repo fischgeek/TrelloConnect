@@ -2,7 +2,7 @@
   "id": "string",
   "name": "string",
   "closed": false,
-  "pos": 16384,
+  "pos": 16384.000,
   "softLimit": null,
   "idBoard": "string",
   "subscribed": false

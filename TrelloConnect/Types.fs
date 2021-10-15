@@ -5,6 +5,7 @@ open FSharp.Data
 open System
 open Pipes
 open Utils
+open Pipes
 
 [<AutoOpen>]
 module Types =
@@ -17,6 +18,7 @@ module Types =
     type private _CardCustomFields = JsonProvider<"../TrelloConnect/Samples/customfields.oncard.sample.json", RootName="CardCustomFields">
     type private _CardSearchResults = JsonProvider<"../TrelloConnect/Samples/cardsearchresults.sample.json", RootName="CardSearchResults">
     type private _SearchResults = JsonProvider<"../TrelloConnect/Samples/searchresults.sample.json", RootName="SearchResults">
+    type private _IdName = JsonProvider<"../TrelloConnect/Samples/idname.sample.json", RootName="IdName">
 
     type private BoardFields =
         | Name
@@ -30,6 +32,13 @@ module Types =
         static member DefaultFields =
             [ BoardFields.Name; BoardFields.Desc ]
             |> BoardFields.Stringify
+
+    type AttachmentMimeType = 
+        | Image
+        | PDF
+        | OctetStream
+        | NotYetHandled
+        | Empty
 
     type CustomField = 
         {
@@ -45,6 +54,7 @@ module Types =
         { Id: string
           Date: DateTime
           MimeType: string
+          MyMimeType: AttachmentMimeType
           Name: string
           Url: string
           Pos: int
@@ -61,6 +71,8 @@ module Types =
           Name: string
           Desc: string
           Labels: Label List
+          ListId: string
+          BoardId: string
           CreatedDate: DateTime 
           Closed: bool }
 
@@ -69,7 +81,7 @@ module Types =
           Name: string
           Closed: bool
           BoardId: string
-          Position: int }
+          Position: decimal }
 
     type Board =
         { Id: string
@@ -80,7 +92,15 @@ module Types =
           Url: string
           ShortUrl: string }
 
+    type IdName = 
+        { Id: string
+          Name: string }
+
     type CardSearchResults = { Cards: Card [] }
+
+    let private buildIdName (idn: _IdName.IdName) : IdName = 
+        { Id = idn.Id
+          Name = idn.Name }
 
     let private buildBoard (b: _Boards.Board) =
         { Id = b.Id
@@ -110,6 +130,8 @@ module Types =
           Desc = c.Desc
           Labels = c.Labels |> Seq.map buildLabel |> Seq.toList
           CreatedDate = Pipes.CardPipe.CreatedDate c.Id 
+          ListId = c.IdList
+          BoardId = c.IdBoard
           Closed = c.Closed }
 
     let private buildLabelFromLabels (l: _Labels.Label) =
@@ -126,6 +148,14 @@ module Types =
         { Id = a.Id
           Date = a.Date.Date
           MimeType = a.MimeType
+          MyMimeType = 
+            a.MimeType
+            |> function
+            | "image/jpeg" -> Image
+            | "application/pdf" -> PDF
+            | "application/octet-stream" -> OctetStream
+            | "" -> Empty
+            | _ -> NotYetHandled
           Name = a.Name
           Url = a.Url
           Pos = a.Pos
@@ -154,6 +184,8 @@ module Types =
             IdModel = c.IdModel
             ModelType = c.ModelType
         }
+
+    let ParseIdName x = _IdName.Parse x |> buildIdName
 
     let ParseBoards x = _Boards.Parse x |> Seq.map buildBoard
 
@@ -192,4 +224,6 @@ module Types =
                   Desc = c.Desc
                   CreatedDate = Pipes.CardPipe.CreatedDate c.Id
                   Closed = c.Closed
+                  ListId = c.IdList
+                  BoardId = c.IdBoard
                   Labels = c.Labels |> Seq.map buildLabelFromCardSearchResults |> Seq.toList })

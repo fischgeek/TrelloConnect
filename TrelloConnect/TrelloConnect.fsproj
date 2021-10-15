@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <!--<TargetFramework>netcoreapp3.1</TargetFramework>-->
+    <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
     <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <ItemGroup>
@@ -9,6 +10,7 @@
     <EmbeddedResource Include="Samples\attachments.sample.json" />
     <EmbeddedResource Include="Samples\board.sample.json" />
     <EmbeddedResource Include="Samples\boards.sample.json" />
+    <EmbeddedResource Include="Samples\idname.sample.json" />
     <EmbeddedResource Include="Samples\card.sample.json" />
     <EmbeddedResource Include="Samples\cards.sample.json" />
     <EmbeddedResource Include="Samples\searchresults.sample.json" />
@@ -29,10 +31,10 @@
     <Compile Include="TrelloOld.fs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FSharp.Data" Version="3.3.3" />
+    <PackageReference Include="FSharp.Data" Version="4.2.3" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="5.0.0" />
+    <PackageReference Update="FSharp.Core" Version="6.0.0" />
   </ItemGroup>
 </Project>

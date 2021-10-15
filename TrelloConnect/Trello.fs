@@ -102,9 +102,21 @@ module Trello =
             this.FormatURL $"/lists/{listId}/cards" []
             |> this.OAuth1GetReturnString Types.ParseCards "Could not get cards."
 
+        member this.GetCardsOnBoard boardId = 
+            this.FormatURL $"/boards/{boardId}/cards" []
+            |> this.OAuth1GetReturnString Types.ParseCards "Could not get cards."
+
         member this.GetCard id =
             this.FormatURL $"/cards/{id}" []
             |> this.OAuth1GetReturnString Types.ParseCard "Could not get card."
+
+        member this.CreateCardIgnore(listId, name, ?desc) =
+            this.FormatURL
+                $"/cards"
+                [ param "idList" listId
+                  param "name" name
+                  param "desc" (desc |> SP.NoneToBlank) ]
+            |> this.OAuth1PostReturnString ignore "Failed to create card."
 
         member this.CreateCard(listId, name, ?desc) =
             this.FormatURL
@@ -112,15 +124,15 @@ module Trello =
                 [ param "idList" listId
                   param "name" name
                   param "desc" (desc |> SP.NoneToBlank) ]
-            |> this.OAuth1PostReturnString ignore "Failed to create card."
+            |> this.OAuth1PostReturnString Types.ParseCard "Failed to create card."
 
-        member this.CreateCard2(listId, name, ?desc) =
-            this.FormatURL
-                $"/cards"
-                [ param "idList" listId
-                  param "name" name
-                  param "desc" (desc |> SP.NoneToBlank) ]
-            |> this.OAuth1PostReturnString ignore "Failed to create card."
+        //member this.CreateCard2(listId, name, ?desc) =
+        //    this.FormatURL
+        //        $"/cards"
+        //        [ param "idList" listId
+        //          param "name" name
+        //          param "desc" (desc |> SP.NoneToBlank) ]
+        //    |> this.OAuth1PostReturnString ignore "Failed to create card."
 
         member this.UpdateCard(cardId, ?newName, ?newDesc, ?pos) =
             this.FormatURL
@@ -150,9 +162,23 @@ module Trello =
             this.FormatURL $"/cards/{id}/attachments" [ param "url" url ]
             |> this.OAuth1PostReturnString ignore "Could not attach url to card."
 
-        member this.AddLabelToCard id labelId =
+        member this.AddLabelToCard (id: string) labelId =
             this.FormatURL $"/cards/{id}/idLabels" [ param "value" labelId ]
             |> this.OAuth1PostReturnString ignore "Could not add label to card."
+
+        member this.AddLabelToCardByName (id: string) (lblName: string) = 
+            let card = this.GetCard id
+            this.GetLabelsOnBoard card.BoardId
+            |> Seq.tryFind (fun l -> l.Name.ToLower() = lblName)
+            |> function
+            | Some lbl -> this.AddLabelToCard card.Id lbl.Id
+            | None -> ()
+
+        member this.AddLablesToCardByName (id: string) (lbls: string list) = 
+            lbls |> Seq.iter (fun lbl -> this.AddLabelToCardByName id lbl)
+
+        member this.AddLablesToCardByNameArray (id: string) (lbls: string array) = 
+            lbls |> Seq.iter (fun lbl -> this.AddLabelToCardByName id lbl)
 
         member this.MoveCard(id, newListId, ?pos) =
             this.FormatURL
