@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <!--<TargetFramework>netcoreapp3.1</TargetFramework>-->
+    <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
     <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <ItemGroup>
@@ -10,6 +11,7 @@
     <EmbeddedResource Include="Samples\attachments.sample.json" />
     <EmbeddedResource Include="Samples\board.sample.json" />
     <EmbeddedResource Include="Samples\boards.sample.json" />
+    <EmbeddedResource Include="Samples\idname.sample.json" />
     <EmbeddedResource Include="Samples\card.sample.json" />
     <EmbeddedResource Include="Samples\cards.sample.json" />
     <EmbeddedResource Include="Samples\searchresults.sample.json" />
