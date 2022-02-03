@@ -40,6 +40,53 @@ module Types =
         | NotYetHandled
         | Empty
 
+    type CardCoverColor = 
+        | Pink
+        | Yellow
+        | Lime
+        | Blue
+        | Black
+        | Orange
+        | Red
+        | Purple
+        | Sky
+        | Green
+        static member StringValue cc = 
+            match cc with 
+                | Pink -> "pink"
+                | Yellow -> "yellow"
+                | Lime -> "lime"
+                | Blue -> "blue"
+                | Black -> "black"
+                | Orange -> "orange"
+                | Red -> "red"
+                | Purple -> "purple"
+                | Sky -> "sky"
+                | Green -> "green"
+
+    type CardCoverSize =
+        | Normal
+        | Full
+        static member StringValue cc = 
+            match cc with
+            | Normal -> "normal"
+            | Full -> "full"
+
+    type CardCoverBrightness = 
+        | Light
+        | Dark
+        static member StringValue cc =
+            match cc with
+            | Light -> "light"
+            | Dark -> "dark"
+
+    type CardCover =
+        {
+            Color: CardCoverColor
+            Brightness: CardCoverBrightness
+            Size: CardCoverSize
+        }
+
     type CustomField = 
         {
             Id: string

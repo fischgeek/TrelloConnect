@@ -15,5 +15,8 @@
     <Compile Include="..\TrelloConnect\Trello.fs" />
     <Compile Include="..\TrelloConnect\TrelloOld.fs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="paket.references" />
+  </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

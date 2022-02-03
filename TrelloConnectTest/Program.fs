@@ -6,6 +6,7 @@ open FSharp.Data
 open System.IO
 open TrelloConnect.Trello
 open TrelloConnect.Types
+open System.Threading
 
 module Main = 
     [<Literal>]
@@ -65,5 +66,10 @@ module Main =
         outData "attachments" $"{(attachments |> Seq.toArray).Length}"
         attachments |> Seq.iteri (fun i a -> outData i a.Name)
 
+        outTitle "Setting a card cover color" cardId
+        //trello.SetCardCoverBlack cardId-
+        //Thread.Sleep(2000)
+        outTitle "Removing card cover color" cardId
+        trello.RemoveCardCover cardId
         wait()
         0

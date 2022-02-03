@@ -1,10 +1,13 @@
 ﻿// fsharplint:disable NonPublicValuesNames
 namespace TrelloConnect
 
+open TrelloConnect.Types
 open TrelloConnect.Pipes
 open System
 open System.Configuration
 open System.IO
+open System.Drawing
+open Newtonsoft.Json
 
 [<AutoOpen>]
 module Trello =
@@ -26,6 +29,7 @@ module Trello =
     let private PutJson fn msg body url = MakeCallWithBody HttpPutJson url body fn msg
     let private PutWithOAuth1 key tok fn msg url = MakeCallWithOAuth1 key tok HttpPut url fn msg
     let private PutJsonWithOAuth1 key tok fn msg body url = MakeCallBodyWithOAuth1 key tok body HttpPut url fn msg
+    let private PutJsonObjWithOAuth1 key tok fn msg body url = MakeCallBodyWithOAuth1 key tok body HttpPutJson url fn msg
     
     let private Del fn msg url = MakeCall HttpDel url fn msg
     
@@ -46,6 +50,7 @@ module Trello =
 
         member this.OAuth1PutReturnString fn msg url = PutWithOAuth1 key tok (assumeString fn) msg url
         member this.OAuth1PutJsonReturnString fn msg body url = PutJsonWithOAuth1 key tok (assumeString fn) msg body url
+        member this.OAuth1PutJsonObjReturnString fn msg body url = PutJsonObjWithOAuth1 key tok (assumeString fn) msg body url
 
         member this.OAuth1PostReturnString fn msg url = PosWithOAuth1 key tok (assumeString fn) msg url
         member this.OAuth1PostJsonReturnString fn msg body url = PosJsonWithOAuth1 key tok (assumeString fn) msg body url
@@ -230,3 +235,30 @@ module Trello =
             this.FormatURL
                 $"/cards/{cardId}/customField/{customFieldId}/item" []
             |> this.OAuth1PutJsonReturnString ignore "Failed to update field." newValue
+
+        member this.RemoveCardCover cardId = 
+            let o = {| cover = "null" |} |> JsonConvert.SerializeObject
+            this.FormatURL $"/cards/{cardId}" []
+            |> this.OAuth1PutJsonObjReturnString ignore "Failed to remove card cover." o
+
+        member this.SetCardCoverColor (cardId: string) (cover: CardCover) = 
+            let c = CardCoverColor.StringValue cover.Color
+            let b = CardCoverBrightness.StringValue cover.Brightness
+            let s = CardCoverSize.StringValue cover.Size
+            let o = {| cover = {| color = c; brightness = b; size = s |} |} |> JsonConvert.SerializeObject
+            //let fmt = String.Format("""{"cover":{"color":"{0}","brightness":{1},"size":{2}} }""", c, b, s)
+            //let fmt = cover.ToString()
+            //let json = """ {"cover":{"color":"{0}","brightness":{1},"size":{s}} } """
+            this.FormatURL $"/cards/{cardId}" []
+            |> this.OAuth1PutJsonObjReturnString ignore "Failed to update cover." o
+
+        member this.SetCardCoverPink cardid = this.SetCardCoverColor cardid { Color = CardCoverColor.Pink; Brightness = CardCoverBrightness.Dark; Size = CardCoverSize.Full }
+        member this.SetCardCoverYellow cardid = this.SetCardCoverColor cardid { Color = CardCoverColor.Yellow; Brightness = CardCoverBrightness.Dark; Size = CardCoverSize.Full }
+        member this.SetCardCoverLime cardid = this.SetCardCoverColor cardid { Color = CardCoverColor.Lime; Brightness = CardCoverBrightness.Dark; Size = CardCoverSize.Full }
+        member this.SetCardCoverBlue cardid = this.SetCardCoverColor cardid { Color = CardCoverColor.Blue; Brightness = CardCoverBrightness.Dark; Size = CardCoverSize.Full }
+        member this.SetCardCoverBlack cardid = this.SetCardCoverColor cardid { Color = CardCoverColor.Black; Brightness = CardCoverBrightness.Dark; Size = CardCoverSize.Full }
+        member this.SetCardCoverOrange cardid = this.SetCardCoverColor cardid { Color = CardCoverColor.Orange; Brightness = CardCoverBrightness.Dark; Size = CardCoverSize.Full }
+        member this.SetCardCoverRed cardid = this.SetCardCoverColor cardid { Color = CardCoverColor.Red; Brightness = CardCoverBrightness.Dark; Size = CardCoverSize.Full }
+        member this.SetCardCoverPurple cardid = this.SetCardCoverColor cardid { Color = CardCoverColor.Purple; Brightness = CardCoverBrightness.Dark; Size = CardCoverSize.Full }
+        member this.SetCardCoverSky cardid = this.SetCardCoverColor cardid { Color = CardCoverColor.Sky; Brightness = CardCoverBrightness.Dark; Size = CardCoverSize.Full }
+        member this.SetCardCoverGreen cardid = this.SetCardCoverColor cardid { Color = CardCoverColor.Green; Brightness = CardCoverBrightness.Dark; Size = CardCoverSize.Full }

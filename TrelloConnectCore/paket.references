@@ -1,3 +1,4 @@
 FSharp.Data
 System.Configuration.ConfigurationManager
 FSharp.Core
+Newtonsoft.Json

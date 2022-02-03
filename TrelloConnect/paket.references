@@ -2,3 +2,4 @@ FSharp.Data
 FSharp.Core
 System.Configuration.ConfigurationManager
 Microsoft.NET.Test.Sdk
+Newtonsoft.Json
