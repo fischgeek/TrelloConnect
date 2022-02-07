@@ -8,6 +8,7 @@ open System.Configuration
 open System.IO
 open System.Drawing
 open Newtonsoft.Json
+open System.Web
 
 [<AutoOpen>]
 module Trello =
@@ -35,6 +36,7 @@ module Trello =
     
     let private Pos fn msg url = MakeCall HttpPost url fn msg
     let private PosWithOAuth1 key tok fn msg url = MakeCallWithOAuth1 key tok HttpPost url fn msg
+    let private DelWithOAuth1 key tok fn msg url = MakeCallWithOAuth1 key tok HttpDel url fn msg
     let private PosJsonWithOAuth1 key tok fn msg body url = MakeCallBodyWithOAuth1 key tok body HttpPost url fn msg
 
     let param paramKey paramVal =
@@ -53,6 +55,7 @@ module Trello =
         member this.OAuth1PutJsonObjReturnString fn msg body url = PutJsonObjWithOAuth1 key tok (assumeString fn) msg body url
 
         member this.OAuth1PostReturnString fn msg url = PosWithOAuth1 key tok (assumeString fn) msg url
+        member this.OAuth1DelReturnString fn msg url = DelWithOAuth1 key tok (assumeString fn) msg url
         member this.OAuth1PostJsonReturnString fn msg body url = PosJsonWithOAuth1 key tok (assumeString fn) msg body url
 
         member this.FormatURL (url: string) (x: string list) =
@@ -95,6 +98,13 @@ module Trello =
             this.FormatURL $"/boards/{boardId}/labels" []
             |> this.OAuth1GetReturnString ParseLabels "Could not get labels."
 
+        member this.CreateLabelOnBoard boardId (lbl: Label) = 
+            this.FormatURL $"/boards/{boardId}/labels" 
+                [
+                    param "name" lbl.Name
+                    param "color" lbl.Color
+                ] |> this.OAuth1PostReturnString Types.ParseLabel "Failed to create label."
+
         member this.GetLists boardId =
             this.FormatURL $"/boards/{boardId}/lists" []
             |> this.OAuth1GetReturnString Types.ParseLists "Could not get lists."
@@ -115,20 +125,23 @@ module Trello =
             this.FormatURL $"/cards/{id}" []
             |> this.OAuth1GetReturnString Types.ParseCard "Could not get card."
 
-        member this.CreateCardIgnore(listId, name, ?desc) =
+        member this.CreateCardIgnore(listId, name, ?desc, ?addr) =
             this.FormatURL
                 $"/cards"
                 [ param "idList" listId
                   param "name" name
-                  param "desc" (desc |> SP.NoneToBlank) ]
+                  param "desc" (desc |> SP.NoneToBlank)
+                  param "address" (addr |> SP.NoneToBlank) ]
             |> this.OAuth1PostReturnString ignore "Failed to create card."
 
-        member this.CreateCard(listId, name, ?desc) =
+        member this.CreateCard(listId, name, ?desc, ?locName, ?addr) =
             this.FormatURL
                 $"/cards"
                 [ param "idList" listId
                   param "name" name
-                  param "desc" (desc |> SP.NoneToBlank) ]
+                  param "desc" (desc |> SP.NoneToBlank)
+                  param "locationName" (locName |> SP.NoneToBlank)
+                  param "address" (addr |> SP.NoneToBlank) |> HttpUtility.UrlEncode ] 
             |> this.OAuth1PostReturnString Types.ParseCard "Failed to create card."
 
         //member this.CreateCard2(listId, name, ?desc) =
@@ -146,6 +159,10 @@ module Trello =
                   param "desc" (newDesc |> SP.NoneToBlank)
                   param "pos" (pos |> SP.NoneToBlank) ]
             |> this.OAuth1PutReturnString Types.ParseCard "Failed to update card."
+
+        member this.DeleteCard cardId = 
+            this.FormatURL $"/cards/{cardId}" []
+            |> this.OAuth1DelReturnString ignore "Failed to delete card."
 
         member this.GetCardAttachments cardId =
             this.FormatURL $"/cards/{cardId}/attachments" []

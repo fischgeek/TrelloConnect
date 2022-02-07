@@ -6,6 +6,7 @@
     <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="paket.template" />
     <Compile Include="..\TrelloConnect\Utils.fs" />
     <Compile Include="..\TrelloConnect\Pipes.fs" />
     <Compile Include="..\TrelloConnect\APICalls.fs" />

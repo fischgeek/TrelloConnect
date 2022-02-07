@@ -1,0 +1,5 @@
+type project
+licenseExpression MIT
+id TrelloConnectCore
+authors fischgeek
+description TrelloConnectCore
