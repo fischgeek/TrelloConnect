@@ -1,0 +1,22 @@
+﻿{
+  "id": "string",
+  "idModel": "string",
+  "modelType": "string",
+  "fieldGroup": "string",
+  "display": {
+    "cardFront": true
+  },
+  "name": "string",
+  "pos": 90112,
+  "type": "string",
+  "limits": {
+    "customFieldOptions": {
+      "perField": {
+        "status": "string",
+        "disableAt": 50,
+        "warnAt": 40
+      }
+    }
+  },
+  "isSuggestedField": false
+}

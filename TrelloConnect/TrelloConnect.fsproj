@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <!--<TargetFramework>netcoreapp3.1</TargetFramework>-->
     <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
     <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="paket.references" />
     <EmbeddedResource Include="Samples\attachment.sample.json" />
     <EmbeddedResource Include="Samples\attachments.sample.json" />
@@ -17,7 +18,7 @@
     <EmbeddedResource Include="Samples\cards.sample.json" />
     <EmbeddedResource Include="Samples\searchresults.sample.json" />
     <EmbeddedResource Include="Samples\customfields.oncard.sample.json" />
-    <EmbeddedResource Include="Samples\customfields.sample.json" />
+    <EmbeddedResource Include="Samples\customfield.sample.json" />
     <EmbeddedResource Include="Samples\hook.sample.json" />
     <EmbeddedResource Include="Samples\label.sample.json" />
     <EmbeddedResource Include="Samples\labels.sample.json" />
@@ -35,6 +36,9 @@
   <ItemGroup>
     <None Include="paket.references" />
     <None Include="paket.template" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

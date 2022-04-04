@@ -160,6 +160,12 @@ module Trello =
                   param "pos" (pos |> SP.NoneToBlank) ]
             |> this.OAuth1PutReturnString Types.ParseCard "Failed to update card."
 
+        member this.AddCoordinatesToCard (cardId: string) (coords: decimal * decimal) = 
+            let lat,lng = coords
+            let coordString = $"{lat.ToString()},{lng.ToString()}"
+            this.FormatURL $"/cards/{cardId}" [ param "coordinates" coordString ]
+            |> this.OAuth1PutReturnString Types.ParseCard "Failed to update card's coords."
+
         member this.DeleteCard cardId = 
             this.FormatURL $"/cards/{cardId}" []
             |> this.OAuth1DelReturnString ignore "Failed to delete card."
@@ -229,13 +235,30 @@ module Trello =
                   param "pos" "bottom" ]
             |> this.OAuth1PutReturnString ignore "Failed to move card."
 
-        //member this.GetCustomFieldsOnBoard id =
-        //    this.FormatURL $"/boards/{id}/customFields" []
-        //    |> this.GWO Types "Failed to get custom fields on board."
+        member this.GetCustomField id =
+            this.FormatURL $"/customFields/{id}" []
+            |> this.OAuth1GetReturnString Types.ParseCustomField "Failed to get custom field."
 
         member this.GetCustomFieldsOnCard id =
             this.FormatURL $"/cards/{id}/customFieldItems" []
             |> this.OAuth1GetReturnString Types.ParseCardCustomFields "Failed to get custom fields on card."
+
+        member this.GetCustomFieldsOnCardFull id = 
+            this.GetCustomFieldsOnCard id
+            |> Seq.map (fun f -> 
+                let cf = this.GetCustomField f.IdCustomField
+                {
+                    Id = f.Id
+                    IdModel = f.IdModel
+                    ModelType = f.ModelType
+                    Name = cf.Name
+                    Pos = cf.Pos
+                    Type = cf.Type
+                    IdValue = f.IdValue
+                    IdCustomField = f.IdCustomField
+                    Value = f.Value
+                }
+            )
 
         member this.SetDueDate id dueDate =
             this.FormatURL $"/cards/{id}" [ param "due" dueDate ]

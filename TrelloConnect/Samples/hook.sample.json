@@ -22,6 +22,20 @@
         "name": "research",
         "color": "black"
       },
+      "customField": {
+        "id": "6243a1726aea7008f8aa2a9c",
+        "name": "string",
+        "type": "text"
+      },
+      "customFieldItem": {
+        "id": "6247929bf7178e151fd3d448",
+        "value": {
+          "text": "string"
+        },
+        "idCustomField": "6243a1726aea7008f8aa2a9c",
+        "idModel": "61ea2389c1fe5410f93a64c7",
+        "modelType": "card"
+      },
       "voted": true
     },
     "type": "voteOnCard",

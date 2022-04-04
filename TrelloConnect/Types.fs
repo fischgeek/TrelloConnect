@@ -15,6 +15,7 @@ module Types =
     type private _Cards = JsonProvider<"../TrelloConnect/Samples/cards.sample.json", RootName="Cards">
     type private _Attachments = JsonProvider<"../TrelloConnect/Samples/attachments.sample.json", RootName="Attachments">
     type private _CustomFields = JsonProvider<"../TrelloConnect/Samples/customfields.sample.json", RootName="CustomFields">
+    type private _CustomField = JsonProvider<"../TrelloConnect/Samples/customfield.sample.json", RootName="CustomField">
     type private _CardCustomFields = JsonProvider<"../TrelloConnect/Samples/customfields.oncard.sample.json", RootName="CardCustomFields">
     type private _CardSearchResults = JsonProvider<"../TrelloConnect/Samples/cardsearchresults.sample.json", RootName="CardSearchResults">
     type private _SearchResults = JsonProvider<"../TrelloConnect/Samples/searchresults.sample.json", RootName="SearchResults">
@@ -87,13 +88,36 @@ module Types =
             Size: CardCoverSize
         }
 
-    type CustomField = 
+    type CustomFieldOnCard = 
         {
             Id: string
             IdValue: string
             IdCustomField: string
             IdModel: string
             ModelType: string
+            Value: string
+        }
+
+    type CustomField = 
+        {
+            Id: string
+            IdModel: string
+            ModelType: string
+            Name: string
+            Pos: int
+            Type: string
+        }
+
+    type CustomFieldFull =
+        {
+            Id: string
+            IdModel: string
+            ModelType: string
+            Name: string
+            Pos: int
+            Type: string
+            IdValue: string
+            IdCustomField: string
             Value: string
         }
 
@@ -186,11 +210,13 @@ module Types =
           BoardId = l.IdBoard
           Name = l.Name
           Color = l.Color }
+
     let private buildLabelFromCardSearchResults (l: _CardSearchResults.Label) = 
         { Id = l.Id
           BoardId = l.IdBoard
           Name = l.Name
           Color = l.Color }
+
     let private buildAttachment (a: _Attachments.Attachment) =
         { Id = a.Id
           Date = a.Date.Date
@@ -214,7 +240,17 @@ module Types =
         | Some x -> x
         | None -> ""
 
-    let private buildCustomField (c: _CardCustomFields.CardCustomField) =
+    let private buildCustomField (c: _CustomField.CustomField) = 
+        {
+            Id = c.Id
+            ModelType = c.ModelType
+            IdModel = c.IdModel
+            Name = c.Name
+            Pos = c.Pos
+            Type = c.Type
+        }
+
+    let private buildCustomFieldOnCard (c: _CardCustomFields.CardCustomField) =
         {
             Id = c.Id
             IdValue = 
@@ -225,7 +261,16 @@ module Types =
             Value = 
                 c.Value
                 |> function
-                | Some x -> x.Number.Value.ToString()
+                | Some x -> 
+                    [x.Number; x.Text] 
+                    |> Seq.find Option.isSome
+                    |> Option.defaultValue ""
+
+                    //(x.Number, x.Text)
+                    //|> function
+                    //| Some n, _ -> n
+                    //| _, Some n -> n
+                    //| _ -> ""
                 | None -> ""
             IdCustomField = c.IdCustomField
             IdModel = c.IdModel
@@ -257,9 +302,13 @@ module Types =
     let ParseAttachments x =
         _Attachments.Parse x |> Seq.map buildAttachment
 
+    
     //let ParseCustomFields x = _CustomFields.Parse x
+
+    let ParseCustomField x = _CustomField.Parse x |> buildCustomField
+
     let ParseCardCustomFields x = 
-        _CardCustomFields.Parse x |> Seq.map buildCustomField
+        _CardCustomFields.Parse x |> Seq.map buildCustomFieldOnCard
 
     let ParseCardSearchResults x =
         let csr = _CardSearchResults.Parse x
