@@ -6,20 +6,22 @@ open System
 open Pipes
 open Utils
 open Pipes
+open System.IO
 
 [<AutoOpen>]
 module Types =
-    type private _Boards = JsonProvider<"../TrelloConnect/Samples/boards.sample.json", RootName="Boards">
-    type private _Labels = JsonProvider<"../TrelloConnect/Samples/labels.sample.json", RootName="Labels">    
-    type private _Lists = JsonProvider<"../TrelloConnect/Samples/lists.sample.json", RootName="Lists">
-    type private _Cards = JsonProvider<"../TrelloConnect/Samples/cards.sample.json", RootName="Cards">
-    type private _Attachments = JsonProvider<"../TrelloConnect/Samples/attachments.sample.json", RootName="Attachments">
-    type private _CustomFields = JsonProvider<"../TrelloConnect/Samples/customfields.sample.json", RootName="CustomFields">
-    type private _CustomField = JsonProvider<"../TrelloConnect/Samples/customfield.sample.json", RootName="CustomField">
-    type private _CardCustomFields = JsonProvider<"../TrelloConnect/Samples/customfields.oncard.sample.json", RootName="CardCustomFields">
-    type private _CardSearchResults = JsonProvider<"../TrelloConnect/Samples/cardsearchresults.sample.json", RootName="CardSearchResults">
-    type private _SearchResults = JsonProvider<"../TrelloConnect/Samples/searchresults.sample.json", RootName="SearchResults">
-    type private _IdName = JsonProvider<"../TrelloConnect/Samples/idname.sample.json", RootName="IdName">
+    type private _Boards = JsonProvider<"https://raw.githubusercontent.com/fischgeek/FSharpDataProviderSampleFiles/master/json/trello/boards.sample.json", RootName="Boards">
+    type private _Labels = JsonProvider<"https://raw.githubusercontent.com/fischgeek/FSharpDataProviderSampleFiles/master/json/trello/labels.sample.json", RootName="Labels">    
+    type private _Lists = JsonProvider<"https://raw.githubusercontent.com/fischgeek/FSharpDataProviderSampleFiles/master/json/trello/lists.sample.json", RootName="Lists">
+    type private _Cards = JsonProvider<"https://raw.githubusercontent.com/fischgeek/FSharpDataProviderSampleFiles/master/json/trello/cards.sample.json", RootName="Cards">
+    type private _Attachments = JsonProvider<"https://raw.githubusercontent.com/fischgeek/FSharpDataProviderSampleFiles/master/json/trello/attachments.sample.json", RootName="Attachments">
+    type private _CustomFields = JsonProvider<"https://raw.githubusercontent.com/fischgeek/FSharpDataProviderSampleFiles/master/json/trello/customfields.sample.json", RootName="CustomFields">
+    type private _CustomField = JsonProvider<"https://raw.githubusercontent.com/fischgeek/FSharpDataProviderSampleFiles/master/json/trello/customfield.sample.json", RootName="CustomField">
+    type private _CardCustomFields = JsonProvider<"https://raw.githubusercontent.com/fischgeek/FSharpDataProviderSampleFiles/master/json/trello/customfields.oncard.sample.json", RootName="CardCustomFields">
+    type private _CardSearchResults = JsonProvider<"https://raw.githubusercontent.com/fischgeek/FSharpDataProviderSampleFiles/master/json/trello/cardsearchresults.sample.json", RootName="CardSearchResults">
+    type private _SearchResults = JsonProvider<"https://raw.githubusercontent.com/fischgeek/FSharpDataProviderSampleFiles/master/json/trello/searchresults.sample.json", RootName="SearchResults">
+    type private _IdName = JsonProvider<"https://raw.githubusercontent.com/fischgeek/FSharpDataProviderSampleFiles/master/json/trello/idname.sample.json", RootName="IdName">
+    type WebHook = JsonProvider<"https://raw.githubusercontent.com/fischgeek/FSharpDataProviderSampleFiles/master/json/trello/hook.sample.json", RootName="WebHook">
 
     type private BoardFields =
         | Name
@@ -98,6 +100,15 @@ module Types =
             Value: string
         }
 
+    type EmbeddedCustomFieldOnCard = 
+        {
+            Id: string
+            IdCustomField: string
+            IdModel: string
+            ModelType: string
+            Value: string
+        }
+
     type CustomField = 
         {
             Id: string
@@ -145,7 +156,22 @@ module Types =
           ListId: string
           BoardId: string
           CreatedDate: DateTime 
-          Closed: bool }
+          Closed: bool
+          HasLocation: bool 
+          CustomFields: EmbeddedCustomFieldOnCard List }
+        static member Empty = 
+            {
+                Id = ""
+                Name = ""
+                Desc = ""
+                Labels = List.empty
+                ListId = ""
+                BoardId = ""
+                CreatedDate = DateTime.Now
+                Closed = false
+                HasLocation = false
+                CustomFields = List.Empty
+            }
 
     type List =
         { Id: string
@@ -168,6 +194,121 @@ module Types =
           Name: string }
 
     type CardSearchResults = { Cards: Card [] }
+
+    type HookAction = 
+        | AcceptEnterpriseJoinRequest
+        | AddAttachmentToCard
+        | AddChecklistToCard
+        | AddLabelToCard
+        | AddMemberToBoard
+        | AddMemberToCard
+        | AddMemberToOrganization
+        | AddOrganizationToEnterprise
+        | AddToEnterprisePluginWhitelist
+        | AddToOrganizationBoard
+        | CommentCard
+        | ConvertToCardFromCheckItem
+        | CopyBoard
+        | CopyCard
+        | CopyChecklist
+        | CopyCommentCard
+        | CreateBoard
+        | CreateBoardInvitation
+        | CreateBoardPreference
+        | CreateCard
+        | CreateCheckItem
+        | CreateLabel
+        | CreateList
+        | CreateOrganization
+        | CreateOrganizationInvitation
+        | DeactivatedMemberInBoard
+        | DeactivatedMemberInEnterprise
+        | DeactivatedMemberInOrganization
+        | DeleteAttachmentFromCard
+        | DeleteBoardInvitation
+        | DeleteCard
+        | DeleteCheckItem
+        | DeleteComment
+        | DeleteLabel
+        | DeleteOrganizationInvitation
+        | DisableEnterprisePluginWhitelist
+        | DisablePlugin
+        | DisablePowerUp
+        | EmailCard
+        | EnableEnterprisePluginWhitelist
+        | EnablePlugin
+        | EnablePowerUp
+        | MakeAdminOfBoard
+        | MakeAdminOfOrganization
+        | MakeNormalMemberOfBoard
+        | MakeNormalMemberOfOrganization
+        | MakeObserverOfBoard
+        | MemberJoinedTrello
+        | MoveCardFromBoard
+        | MoveCardToBoard
+        | MoveListFromBoard
+        | MoveListToBoard
+        | ReactivatedMemberInBoard
+        | ReactivatedMemberInEnterprise
+        | ReactivatedMemberInOrganization
+        | RemoveChecklistFromCard
+        | RemoveFromEnterprisePluginWhitelist
+        | RemoveFromOrganizationBoard
+        | RemoveLabelFromCard
+        | RemoveMemberFromBoard
+        | RemoveMemberFromCard
+        | RemoveMemberFromOrganization
+        | RemoveOrganizationFromEnterprise
+        | UnconfirmedBoardInvitation
+        | UnconfirmedOrganizationInvitation
+        | UpdateBoard
+        | UpdateCard
+        | UpdateCheckItem
+        | UpdateCheckItemStateOnCard
+        | UpdateChecklist
+        | UpdateComment
+        | UpdateCustomFieldItem
+        | UpdateLabel
+        | UpdateList
+        | UpdateMember
+        | UpdateOrganization
+        | VoteOnCard
+        | Unknown
+        static member FromString = UnionPipe.FromStringCI<HookAction>
+
+    //let saveMsg prefix msg extra = 
+    //    let fi = FilePipe.WriteTextRandomNamePrefix prefix @"c:\dev\temp\trello-calls\" "json" extra
+    //    $"{msg} Output saved to {fi.FullName}"
+    type ModelString = string
+    type ActionString = string
+
+    type WebhookActionResult = 
+        | ActionNotHandled
+        | CommandNotHandled of string
+        | ModelNotHandled
+        | ActionOrModelNotRecognized
+        | SaveJsonToFile of string
+        | Success of string
+        | Fail of string
+        static member HandleResult (prtMsg: string -> unit) (saveMsg: ModelString -> string -> string) (model: string) (ha: HookAction option) (war: WebhookActionResult) = 
+            let h = 
+                match ha with
+                | Some x -> x.ToString()
+                | None -> "No action Received"
+            war
+            |> function
+            | ActionNotHandled -> $"{h}. Action not handled on Model {model}." |> prtMsg
+            | CommandNotHandled c -> $"{h}. Command '{c}' not handled." |> prtMsg
+            | ModelNotHandled -> $"Model '{model}' not handled." |> prtMsg
+            | ActionOrModelNotRecognized -> $"Model '{model}' not recognized with action '{h}'" |> prtMsg
+            | SaveJsonToFile js -> 
+                let outputFile = saveMsg model js
+                let z = outputFile
+                $"Model '{model}' not recognized with action '{h}'. Saved to {z}" |> prtMsg
+            | Success msg -> $"Success! {h}. {msg}." |> prtMsg
+            | Fail msg -> $"Fail! {h}. {msg}." |> prtMsg
+    
+    type WAR = WebhookActionResult
 
     let private buildIdName (idn: _IdName.IdName) : IdName = 
         { Id = idn.Id
@@ -194,16 +335,6 @@ module Types =
           BoardId = l.IdBoard
           Name = l.Name
           Color = l.Color }
-
-    let private buildCard (c: _Cards.Card) =
-        { Id = c.Id
-          Name = c.Name
-          Desc = c.Desc
-          Labels = c.Labels |> Seq.map buildLabel |> Seq.toList
-          CreatedDate = Pipes.CardPipe.CreatedDate c.Id 
-          ListId = c.IdList
-          BoardId = c.IdBoard
-          Closed = c.Closed }
 
     let private buildLabelFromLabels (l: _Labels.Label) =
         { Id = l.Id
@@ -277,6 +408,38 @@ module Types =
             ModelType = c.ModelType
         }
 
+    let private buildEmbeddedCustomFieldOnCard (c: _Cards.CustomFieldItem) =
+        {
+            Id = c.Id
+            Value = 
+                c.Value
+                |> (fun x -> 
+                    [x.Number; x.Text] 
+                    |> Seq.tryFind Option.isSome
+                    |> function
+                    | Some x -> x.Value
+                    | None -> ""
+                    //|> Seq.find Option.isSome
+                    //|> Option.defaultValue ""
+                )
+            IdCustomField = c.IdCustomField
+            IdModel = c.IdModel
+            ModelType = c.ModelType
+        }
+    
+    let private buildCard (c: _Cards.Card) =
+        { Id = c.Id
+          Name = c.Name
+          Desc = c.Desc
+          Labels = c.Labels |> Seq.map buildLabel |> Seq.toList
+          CreatedDate = Pipes.CardPipe.CreatedDate c.Id 
+          ListId = c.IdList
+          BoardId = c.IdBoard
+          Closed = c.Closed
+          HasLocation = c.Badges.Location
+          CustomFields = c.CustomFieldItems |> Seq.map buildEmbeddedCustomFieldOnCard |> Seq.toList
+        }
+
     let ParseIdName x = _IdName.Parse x |> buildIdName
 
     let ParseBoards x = _Boards.Parse x |> Seq.map buildBoard
@@ -296,14 +459,20 @@ module Types =
 
     let ParseCards x = _Cards.Parse x |> Seq.map buildCard
 
+    let ParseCardsX x = 
+        let cards = _Cards.Parse x
+        cards
+        |> Array.map (fun c ->
+            buildCard c
+        )
+
     let ParseCard (x: string) =
         _Cards.Parse $"[{x}]" |> Seq.item 0 |> buildCard
 
     let ParseAttachments x =
         _Attachments.Parse x |> Seq.map buildAttachment
-
     
-    //let ParseCustomFields x = _CustomFields.Parse x
+    let ParseCustomFields x = _CustomFields.Parse x
 
     let ParseCustomField x = _CustomField.Parse x |> buildCustomField
 
@@ -322,4 +491,8 @@ module Types =
                   Closed = c.Closed
                   ListId = c.IdList
                   BoardId = c.IdBoard
-                  Labels = c.Labels |> Seq.map buildLabelFromCardSearchResults |> Seq.toList })
+                  Labels = c.Labels |> Seq.map buildLabelFromCardSearchResults |> Seq.toList 
+                  HasLocation = c.Badges.Location 
+                  CustomFields = []
+                  //CustomFields = c.CustomFieldItems |> Seq.map buildCustomFieldOnCard |> Seq.toList
+                })

@@ -7,16 +7,21 @@ open System
 
 [<AutoOpen>]
 module WebCalls =
+    type WebCallResult = 
+        | Success
+        | Failure of string
     type HttpResultDataType =
         | String of string
         | Bytes of byte seq
     type HttpResponseStatus =
+        | BadRequest
         | Unauthorized
         | Throttle
         | Success of HttpResultDataType
         //| Nothing of string
     let private ReturnResponse(res: HttpResponse): HttpResponseStatus =
         match res.StatusCode with
+        | 400 -> BadRequest
         | 401 -> Unauthorized
         | 429 -> Throttle
         | _ ->
@@ -55,8 +60,7 @@ module WebCalls =
         static member Headers x b = {b with HttpRequestBuilder.Headers = x}
         static member Body x b = {b with HttpRequestBuilder.Body = x }
         static member OAuth1 key tok b = {b with OAuth1Key = key; OAuth1Token = tok}
-        
-
+    
     let HttpGet (x:HttpRequestBuilder) =
         Http.Request(url = x.Url, query = x.Query, headers = x.GetHeaders(), httpMethod = "get") |> ReturnResponse
 
@@ -67,7 +71,11 @@ module WebCalls =
         Http.Request(url = x.Url, query = x.Query, headers = x.GetHeaders() @ [ ContentType HttpContentTypes.Json ], httpMethod = "put", body = (x.Body |> TextRequest)) |> ReturnResponse
 
     let HttpDel (x:HttpRequestBuilder) = 
-        Http.Request(url = x.Url, query = x.Query, headers = x.GetHeaders(), httpMethod = "delete") |> ReturnResponse
+        let h = x.GetHeaders()
+        let q = x.Query
+        let u = x.Url
+        try Http.Request(url = u, query = q, headers = h, httpMethod = HttpMethod.Delete) |> ReturnResponse
+        with ex -> failwith ex.Message
 
     let HttpPost (x:HttpRequestBuilder) =
         Http.Request (url = x.Url, query = x.Query, headers = x.GetHeaders() @ [ ContentType HttpContentTypes.Json ], httpMethod = "post", body = (x.Body |> TextRequest)) |> ReturnResponse

@@ -3,11 +3,13 @@
   <PropertyGroup>
     <!--<TargetFramework>netstandard2.0</TargetFramework>-->
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
     <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
     <Version>1.0.0.1</Version>
     <FileVersion>1.0.0.1</FileVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="Samples\**" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="paket.template" />
     <Compile Include="..\TrelloConnect\Utils.fs" />

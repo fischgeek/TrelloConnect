@@ -1,14 +1,16 @@
-﻿// fsharplint:disable NonPublicValuesNames
-namespace TrelloConnect
+﻿namespace TrelloConnect
+// fsharplint:disable NonPublicValuesNames
 
 open TrelloConnect.Types
 open TrelloConnect.Pipes
+open TrelloConnect.WebCalls
 open System
 open System.Configuration
 open System.IO
 open System.Drawing
 open Newtonsoft.Json
 open System.Web
+open FSharp.Data
 
 [<AutoOpen>]
 module Trello =
@@ -19,12 +21,20 @@ module Trello =
         |> function
         | Success x -> fn x
         | _ -> failwith msg
+    let private MakeCallWithQuery verb url query fn msg = 
+        HRB.Url url
+        |> HRB.Query query
+        |> verb
+        |> function
+        | Success x -> fn x
+        | _ -> failwith msg
     let private MakeCall verb url fn msg = MakeCallWithBody verb url "" fn msg
     let private MakeCallWithOAuth1 key tok verb url fn msg = MakeCall (HRB.OAuth1 key tok >> verb) url fn msg
     let private MakeCallBodyWithOAuth1 key tok body verb url fn msg = MakeCall (HRB.OAuth1 key tok >> HRB.Body body >> verb) url fn msg
 
     let private Get fn msg url = MakeCall HttpGet url fn msg
     let private GetWithOAuth1 key tok fn msg url = MakeCallWithOAuth1 key tok HttpGet url fn msg
+    //let private DelWithQueryAuth key tok fn msg url = MakeCallWithBody (key:string) (tok:string) HttpDel url fn msg
     
     let private Put fn msg url = MakeCall HttpPut url fn msg
     let private PutJson fn msg body url = MakeCallWithBody HttpPutJson url body fn msg
@@ -46,9 +56,14 @@ module Trello =
         match xx with
         | String x -> fn x
         | Bytes x -> failwith "Did not get a string return type."
+
+    let getLabelByName (c: Card) lblName = c.Labels |> Seq.tryFind (fun l -> l.Name = lblName)
+
     type TrelloWorker(key: string, tok: string) =
         member this.OAuth1GetReturnString fn msg url = GetWithOAuth1 key tok (assumeString fn) msg url
         member this.OAuth1GetReturnAny fn msg url = GetWithOAuth1 key tok fn msg url
+        //member this.QueryAuth fn msg url = GetWithQueryAuth key tok fn msg url
+        member this.QueryDelete fn msg url = Del fn msg url
 
         member this.OAuth1PutReturnString fn msg url = PutWithOAuth1 key tok (assumeString fn) msg url
         member this.OAuth1PutJsonReturnString fn msg body url = PutJsonWithOAuth1 key tok (assumeString fn) msg body url
@@ -113,6 +128,17 @@ module Trello =
             this.FormatURL $"/lists/{id}" []
             |> this.OAuth1GetReturnString Types.ParseList "Could not get list."
 
+        //static member _GetCard (cId: string) (t: TrelloWorker) =
+        //    // trello call to get card
+        //    let c = t.GetCard cId
+        //    c
+
+        //static member UpdateCardName (name: string) (t: TrelloWorker) (c: Card) = 
+        //    ()
+
+        //static member RenameCard cardid newname t = 
+        //    TrelloWorker._GetCard cardid t |> TrelloWorker.UpdateCardName newname t 
+
         member this.GetCards listId =
             this.FormatURL $"/lists/{listId}/cards" []
             |> this.OAuth1GetReturnString Types.ParseCards "Could not get cards."
@@ -120,6 +146,13 @@ module Trello =
         member this.GetCardsOnBoard boardId = 
             this.FormatURL $"/boards/{boardId}/cards" []
             |> this.OAuth1GetReturnString Types.ParseCards "Could not get cards."
+
+        member this.GetCardsOnBoardWithCustomFields boardId = 
+            // /boards/{boardId}/cards/?fields=name&customFieldItems=true
+            let res = 
+                this.FormatURL $"/boards/{boardId}/cards" [param "fields" "id,name,desc,labels,idList,idBoard,closed,badges"; param "customFieldItems" "true"]
+                |> this.OAuth1GetReturnString Types.ParseCardsX "Could not get cards."
+            res
 
         member this.GetCard id =
             this.FormatURL $"/cards/{id}" []
@@ -228,12 +261,16 @@ module Trello =
                   param "pos" "top" ]
             |> this.OAuth1PutReturnString ignore "Failed to move card."
 
-        member this.MoveCardToBottom id newListId = 
+        member this.MoveCardToBottom cardId newListId = 
             this.FormatURL
-                $"/cards/{id}"
+                $"/cards/{cardId}"
                 [ param "idList" newListId
                   param "pos" "bottom" ]
             |> this.OAuth1PutReturnString ignore "Failed to move card."
+
+        member this.GetCustomFieldsOnBoard boardId =
+            this.FormatURL $"/boards/{boardId}/customFields" []
+            |> this.OAuth1GetReturnString Types.ParseCustomFields "Failed to get custom fields on board."
 
         member this.GetCustomField id =
             this.FormatURL $"/customFields/{id}" []
@@ -276,10 +313,30 @@ module Trello =
                 $"/cards/{cardId}/customField/{customFieldId}/item" []
             |> this.OAuth1PutJsonReturnString ignore "Failed to update field." newValue
 
+        member this.SetCustomFieldNumberValue cardId customFieldId (newValue: int) = 
+            let o = {| value = {| number = newValue.ToString() |} |} |> JsonConvert.SerializeObject
+            this.FormatURL
+                $"/cards/{cardId}/customField/{customFieldId}/item" []
+            |> this.OAuth1PutJsonObjReturnString ignore "Failed to update field." o
+
+        member this.SetCustomFieldTextValue cardId customFieldId (newValue: string) = 
+            let o = {| value = {| text = newValue |} |} |> JsonConvert.SerializeObject
+            this.FormatURL
+                $"/cards/{cardId}/customField/{customFieldId}/item" []
+            |> this.OAuth1PutJsonObjReturnString ignore "Failed to update field." o
+
         member this.RemoveCardCover cardId = 
             let o = {| cover = "null" |} |> JsonConvert.SerializeObject
             this.FormatURL $"/cards/{cardId}" []
             |> this.OAuth1PutJsonObjReturnString ignore "Failed to remove card cover." o
+
+        member this.RemoveLabelFromCard (cardId: string) (lblId: string) =
+            this.FormatURL $"/cards/{cardId}/idLabels/{lblId}" []
+            |> this.OAuth1DelReturnString ignore "Failed to remove label from card."
+
+        member this.RemoveLocationFromCard (cardId: string) = 
+            this.FormatURL $"/cards/{cardId}" [ param "coordinates" " " ]
+            |> this.OAuth1PutReturnString ignore "Failed to remove location from card."
 
         member this.SetCardCoverColor (cardId: string) (cover: CardCover) = 
             let c = CardCoverColor.StringValue cover.Color
@@ -302,3 +359,8 @@ module Trello =
         member this.SetCardCoverPurple cardid = this.SetCardCoverColor cardid { Color = CardCoverColor.Purple; Brightness = CardCoverBrightness.Dark; Size = CardCoverSize.Full }
         member this.SetCardCoverSky cardid = this.SetCardCoverColor cardid { Color = CardCoverColor.Sky; Brightness = CardCoverBrightness.Dark; Size = CardCoverSize.Full }
         member this.SetCardCoverGreen cardid = this.SetCardCoverColor cardid { Color = CardCoverColor.Green; Brightness = CardCoverBrightness.Dark; Size = CardCoverSize.Full }
+
+        static member ParseWebhook (input: string) = 
+            let hook = WebHook.Parse(input.ToString())
+            let fullHookJson = hook.JsonValue.ToString()
+            hook

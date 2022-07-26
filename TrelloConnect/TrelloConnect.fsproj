@@ -5,25 +5,11 @@
     <!--<TargetFramework>netcoreapp3.1</TargetFramework>-->
     <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
     <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
+    <Configurations>Debug;Release;Local</Configurations>
   </PropertyGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="paket.references" />
-    <EmbeddedResource Include="Samples\attachment.sample.json" />
-    <EmbeddedResource Include="Samples\attachments.sample.json" />
-    <EmbeddedResource Include="Samples\board.sample.json" />
-    <EmbeddedResource Include="Samples\boards.sample.json" />
-    <EmbeddedResource Include="Samples\idname.sample.json" />
-    <EmbeddedResource Include="Samples\card.sample.json" />
-    <EmbeddedResource Include="Samples\cards.sample.json" />
-    <EmbeddedResource Include="Samples\searchresults.sample.json" />
-    <EmbeddedResource Include="Samples\customfields.oncard.sample.json" />
-    <EmbeddedResource Include="Samples\customfield.sample.json" />
-    <EmbeddedResource Include="Samples\hook.sample.json" />
-    <EmbeddedResource Include="Samples\label.sample.json" />
-    <EmbeddedResource Include="Samples\labels.sample.json" />
-    <EmbeddedResource Include="Samples\list.sample.json" />
-    <EmbeddedResource Include="Samples\lists.sample.json" />
     <Compile Include="Utils.fs" />
     <Compile Include="Pipes.fs" />
     <Compile Include="APICalls.fs" />

@@ -1,6 +1,8 @@
 ﻿namespace TrelloConnect
 
 open System
+open Microsoft.FSharp.Reflection
+open System.IO
 
 [<AutoOpen>]
 module Pipes = 
@@ -15,6 +17,31 @@ module Pipes =
             let converted = System.Convert.ToInt64(firstEight, 16)
             let dt = DateTimeOffset.FromUnixTimeSeconds(converted).DateTime
             dt
+
+    and DateTimePipe = 
+        static member private pad2 i =
+            if i <= 9 then
+                sprintf "0%i" i
+            else
+                i.ToString()
+
+        static member private pad3 (i: int) : string =
+            if i <= 9 then
+                sprintf "00%i" i
+            else if i <= 99 then
+                sprintf "0%i" i
+            else
+                i.ToString()
+        static member ToCompressedStamp (d: DateTime) : string =
+            sprintf 
+                "%i%i%i%s%s%s%s" 
+                d.Year 
+                d.Month 
+                d.Day 
+                (DateTimePipe.pad2 d.Hour) 
+                (DateTimePipe.pad2 d.Minute) 
+                (DateTimePipe.pad2 d.Second) 
+                (DateTimePipe.pad3 d.Millisecond)
 
     and StringPipe = 
         static member NoneToBlank (str: string option) = if str.IsSome then str.Value else ""
@@ -35,4 +62,27 @@ module Pipes =
 
     and SP = StringPipe
 
+    and FilePipe =
+        static member WriteTextRandomNamePrefix (prefix: string) (dir: string) (extNoDot: string) (text: string) =
+            let guid = (Guid.NewGuid()).ToString()
+            //let name = DateTime.Now |> DateTimePipe.ToCompressedStamp
+            let nwp = $"{prefix}_{guid}"
+            let di = dir |> DirectoryInfo
+            di.Create()
+            let fi = Path.Combine(di.FullName, $"{nwp}.{extNoDot}") |> FileInfo
+            File.WriteAllText(fi.FullName, text)
+            fi
+
+    and UnionPipe = 
+        static member FromStringFull<'a>(s: string) (comparison: string -> string -> bool): 'a option =
+            match FSharpType.GetUnionCases typeof<'a> |> Array.filter (fun x -> x.Name |> comparison s) with
+            | [| case |] -> Some(FSharpValue.MakeUnion(case, [||]) :?> 'a)
+            | _ -> None
+
+        static member FromString<'a>(s: string) =
+            UnionPipe.FromStringFull<'a> s (=)
+            
+        static member FromStringCI<'a>(s: string) =
+            let s = s.ToLower()
+            UnionPipe.FromStringFull<'a> s (fun (a: string) s -> a.ToLower() = s.ToLower())
 
