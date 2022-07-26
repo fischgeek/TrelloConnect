@@ -1,2 +1,5 @@
-FSharp.Core
 FSharp.Data
+FSharp.Core
+System.Configuration.ConfigurationManager
+Newtonsoft.Json
+Microsoft.Net.Http
