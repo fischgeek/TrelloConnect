@@ -6,12 +6,13 @@ open System.IO
 
 [<AutoOpen>]
 module Pipes = 
+    [<Obsolete("Is this needed?", true)>]
     type Board = 
         { Id: string
           Name: string }
         static member GetBoardById id = ()
 
-    and CardPipe = 
+    type CardPipe = 
         static member CreatedDate (cardId: string) = 
             let firstEight = cardId.Substring(0, 8)
             let converted = System.Convert.ToInt64(firstEight, 16)
