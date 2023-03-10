@@ -9,6 +9,7 @@
     <FileVersion>1.0.0.1</FileVersion>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="paket.references" />
     <None Include="paket.template" />
     <Compile Include="..\TrelloConnect\Utils.fs" />
     <Compile Include="..\TrelloConnect\Pipes.fs" />
@@ -18,9 +19,6 @@
     <Compile Include="..\TrelloConnect\Types.fs" />
     <Compile Include="..\TrelloConnect\Trello.fs" />
     <Compile Include="..\TrelloConnect\TrelloOld.fs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="paket.references" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

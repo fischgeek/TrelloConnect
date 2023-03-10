@@ -1,3 +1,4 @@
+group Core31
 FSharp.Data
 System.Configuration.ConfigurationManager
 FSharp.Core
